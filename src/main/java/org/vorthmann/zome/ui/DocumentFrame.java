@@ -58,6 +58,8 @@ import org.vorthmann.ui.Controller;
 import org.vorthmann.ui.ExclusiveAction;
 
 import com.vzome.desktop.controller.ViewPlatformControlPanel;
+import org.vorthmann.j3d.Trackball;
+import org.vorthmann.j3d.Trackball.SpinModeEnum;
 
 public class DocumentFrame extends JFrame implements PropertyChangeListener
 {
@@ -237,6 +239,15 @@ public class DocumentFrame extends JFrame implements PropertyChangeListener
         modelArticleEditPanel .setPreferredSize( new Dimension( width, 800 ) );
     }
 
+    private JMenuItem createTrackBallRadioButtonMenuItem(String menuText, String commandPrefix, Trackball.SpinModeEnum spinMode, ButtonGroup trackballGroup, ActionListener trackballAction )
+    {
+        JMenuItem trackballMenuItem = (JMenuItem) setAction( new JRadioButtonMenuItem(), menuText, commandPrefix + spinMode.name(), trackballAction );
+        trackballMenuItem .setSelected( spinMode == Trackball.getSpinMode() );
+        trackballMenuItem .setEnabled( true );
+        trackballGroup.add( trackballMenuItem );
+        return trackballMenuItem;
+    }
+    
     public DocumentFrame( final ApplicationUI appui, File file, final Controller controller )
     {
         mAppUI = appui;
@@ -1151,6 +1162,32 @@ public class DocumentFrame extends JFrame implements PropertyChangeListener
 
         menu.add( createMenuItem( "Shapes...", "configureShapes", localActions ) );
         menu.add( createMenuItem( "Directions...", "configureDirections", localActions ) );
+        
+        ////////////////////////////////////////////////
+        // begin Trackball submenu
+        submenu = new JMenu( "Trackball..." );
+        final String trackballCmdPrefix = "trackball.";
+        ButtonGroup trackballButtonGroup = new ButtonGroup();        
+        ActionListener setTrackballSpinMode = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cmd = e.getActionCommand();
+                if (cmd.startsWith(trackballCmdPrefix)) {
+                    SpinModeEnum spinMode = Enum.valueOf(SpinModeEnum.class, cmd.substring(trackballCmdPrefix.length()));
+                    Trackball.setSpinMode(spinMode);
+                }
+            }
+        };
+
+        submenu.add( createTrackBallRadioButtonMenuItem("Unlock", trackballCmdPrefix, SpinModeEnum.UNLOCKED, trackballButtonGroup, setTrackballSpinMode) );
+        submenu.add( createTrackBallRadioButtonMenuItem("Spin on X", trackballCmdPrefix, SpinModeEnum.SPIN_ON_X, trackballButtonGroup, setTrackballSpinMode) );
+        submenu.add( createTrackBallRadioButtonMenuItem("Spin on Y", trackballCmdPrefix, SpinModeEnum.SPIN_ON_Y, trackballButtonGroup, setTrackballSpinMode) );
+        submenu.add( createTrackBallRadioButtonMenuItem("Lock", trackballCmdPrefix, SpinModeEnum.LOCKED, trackballButtonGroup, setTrackballSpinMode) );
+
+        menu.add( submenu );
+        submenu .setEnabled( true );
+        // end of Trackball submenu
+        ////////////////////////////////////////////////
 
         JMenuItem cbMenuItem = (JMenuItem) setAction( new JCheckBoxMenuItem(), "Show Directions Graphically", "toggleOrbitViews",
                 controller );

@@ -35,14 +35,14 @@ public abstract class Trackball extends MouseToolDefault {
     }
 	
 
-	public void init( double speed, boolean modal )
+	public final void init( double speed, boolean modal )
 	{
 		mModal = modal;
 		setSpeed( speed );
 	}
 	
 
-	public void init( double speed, boolean modal, int button )
+	public final void init( double speed, boolean modal, int button )
 	{
 		mModal = modal;
 		setSpeed( speed );
@@ -63,25 +63,43 @@ public abstract class Trackball extends MouseToolDefault {
         mModal = value;    
     }
 
+    @Override
     public  void mousePressed( MouseEvent e )
     {
         oldX = e .getX();
         oldY = e .getY();
     }
 
+    @Override
     public  void mouseDragged( MouseEvent e )
     {
         if ( mModal )
             trackballRolled( e );
     }
 
+    @Override
     public  void mouseMoved( MouseEvent e )
     {
         if ( ! mModal )
             trackballRolled( e );
     }
 
-    private  void trackballRolled( MouseEvent e )
+    public enum SpinModeEnum {
+        UNLOCKED,
+        SPIN_ON_X,
+        SPIN_ON_Y,
+        LOCKED
+    }
+    protected static SpinModeEnum spinMode = SpinModeEnum.UNLOCKED;
+    
+    public final static void setSpinMode( SpinModeEnum mode ) {
+        spinMode = mode; 
+    }
+    public final static SpinModeEnum getSpinMode( ) {
+        return spinMode; 
+    }
+
+    private void trackballRolled( MouseEvent e )
     {
         // get the new coordinates
         int newX = e .getX();
@@ -92,6 +110,22 @@ public abstract class Trackball extends MouseToolDefault {
         // set the old values
         oldX = newX;
         oldY = newY;
+        
+        // apply spinMode
+        switch (spinMode) {
+            case SPIN_ON_X:
+                angleX = 0;
+                break;
+            case SPIN_ON_Y:
+                angleY = 0;
+                break;
+            case LOCKED:
+                angleX = 0;
+                angleY = 0;
+                break;
+            default:
+                break;
+        }
 
         double radians = ((double) angleY) * mSpeed;
         AxisAngle4d yAngle = new AxisAngle4d( new Vector3d( 1d, 0d, 0d ), radians );
