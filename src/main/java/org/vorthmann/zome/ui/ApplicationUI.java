@@ -2,6 +2,7 @@
 package org.vorthmann.zome.ui;
 
 import java.awt.EventQueue;
+import java.awt.SplashScreen;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -29,7 +30,7 @@ import javax.swing.JOptionPane;
 
 import org.vorthmann.j3d.Platform;
 import org.vorthmann.ui.Controller;
-import org.vorthmann.ui.SplashScreen;
+//import org.vorthmann.ui.SplashScreen;
 import org.vorthmann.zome.app.impl.ApplicationController;
 
 /**
@@ -163,16 +164,16 @@ public final class ApplicationUI implements ActionListener, PropertyChangeListen
 		 * Get the splash screen up before doing any more work.
          */
 
-        SplashScreen splash = null;
-        String splashImage = "org/vorthmann/zome/ui/vZome-6-splash.png";
-        if ( splashImage != null ) {
-            splash = new SplashScreen( splashImage );
-            splash .splash();
-            logger .info( "splash screen displayed" );
-        } 
-        else {
-            logger .severe( "splash screen not found at " + splashImage );
-        }
+//        SplashScreen splash = null;
+//        String splashImage = "org/vorthmann/zome/ui/vZome-6-splash.png";
+//        if ( splashImage != null ) {
+//            splash = new SplashScreen( splashImage );
+//            splash .splash();
+//            logger .info( "splash screen displayed" );
+//        }
+//        else {
+//            logger .severe( "splash screen not found at " + splashImage );
+//        }
 
         theUI = new ApplicationUI();
 
@@ -188,7 +189,7 @@ public final class ApplicationUI implements ActionListener, PropertyChangeListen
          */
 
         // NOW we're ready to spend the cost of further initialization, but on the event thread
-        EventQueue .invokeLater( new InitializationWorker( theUI, args, codebase, splash ) );
+        EventQueue .invokeLater( new InitializationWorker( theUI, args, codebase ) );
         
         return theUI;
     }
@@ -198,14 +199,14 @@ public final class ApplicationUI implements ActionListener, PropertyChangeListen
     	private final ApplicationUI ui;
 		private final String[] args;
 		private final URL codebase;
-		private final SplashScreen splash;
+//		private final SplashScreen splash;
 
-		public InitializationWorker( ApplicationUI ui, String[] args, URL codebase, SplashScreen splash )
+		public InitializationWorker( ApplicationUI ui, String[] args, URL codebase )
     	{
 			this.ui = ui;
 			this.args = args;
 			this.codebase = codebase;
-			this.splash = splash;
+//			this.splash = splash;
     	}
 
 		@Override
@@ -268,8 +269,9 @@ public final class ApplicationUI implements ActionListener, PropertyChangeListen
 	        
 	        ui.mController .actionPerformed( new ActionEvent( this, ActionEvent.ACTION_PERFORMED, defaultAction ) );
 
+            final SplashScreen splash = SplashScreen.getSplashScreen();
         	if ( splash != null )
-        		splash .dispose();
+        		splash .close();
 		}
     }
     
