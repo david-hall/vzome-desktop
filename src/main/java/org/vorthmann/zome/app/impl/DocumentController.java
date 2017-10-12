@@ -993,7 +993,7 @@ public class DocumentController extends DefaultController implements J3dComponen
     {
         if ( command.equals( "runZomicScript" ) 
                 || command.equals( "runPythonScript" )
-                || command.equals( "import.vef" ) 
+                || command.startsWith( "import.vef" )
                 //|| command.equals( "import.zomod" ) 
                 )
             documentModel .doScriptAction( command, script );
@@ -1108,7 +1108,7 @@ public class DocumentController extends DefaultController implements J3dComponen
                 this .openApplication( file );
                 return;
             }
-            if ( command.equals( "import.vef" ) 
+            if ( command.startsWith( "import.vef" )
                     // || command.equals( "import.zomod" )
                     ) {
                 String vefData = readFile( file );

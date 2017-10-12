@@ -736,6 +736,7 @@ public class DocumentFrame extends JFrame implements PropertyChangeListener, Con
         		break;
                 
         	case "import.vef":
+            case "import.vef.tetrahedral":
         		actionListener = new ControllerFileAction( new FileDialog( this ), true, command, "vef", controller );
         		break;
                 
