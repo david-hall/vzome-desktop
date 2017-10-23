@@ -100,6 +100,15 @@ public class DocumentMenuBar extends JMenuBar implements PropertyChangeListener
 		            submenu .add( createMenuItem( label + " Field", "new-" + fName ) );
 				}
 			}
+
+            fieldNames = controller .getCommandList( "parameterizedFields" );
+            for ( String fName : fieldNames ) {
+				if ( controller .propertyIsTrue( "enable." + fName + ".field" ) ) {
+					String label = controller .getProperty( "field.label." + fName + "7" );
+		            submenu .add( createMenuItem( label + " Field", "new-" + fName + "7") );
+				}
+			}
+
             menu.add( submenu );
         }
         else

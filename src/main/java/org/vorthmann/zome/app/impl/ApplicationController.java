@@ -507,7 +507,23 @@ public class ApplicationController extends DefaultController
         {
             Set<String> names = modelApp .getFieldNames();
             SortedSet<String> sorted = new TreeSet<String>( names );
-            return sorted .toArray( new String[]{} );
+            return sorted .toArray( new String[sorted.size()] );
+        }
+        else if ( listName .equals( "parameterizedFields" ) )
+        {
+            Set<String> names = modelApp .getParameterizedFieldNames();
+            SortedSet<String> sorted = new TreeSet<String>( names );
+            return sorted .toArray( new String[sorted.size()] );
+        }
+        else if ( listName .startsWith( "field.minimum." ) )
+        {
+            // TODO: Return the greater of the value in the prefs file and that specified by the modelApp
+            return new String[] { modelApp .getFieldMinimum( listName.substring("field.minimum.".length()) ) };
+        }
+        else if ( listName .startsWith( "field.maximum." ) )
+        {
+            // TODO: Return the lesser of the value in the prefs file and that specified by the modelApp
+            return new String[] { modelApp .getFieldMaximum( listName.substring("field.maximum.".length()) ) };
         }
         else if ( listName .startsWith( "symmetries." ) )
         {
