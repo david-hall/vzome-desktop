@@ -104,8 +104,20 @@ public class DocumentMenuBar extends JMenuBar implements PropertyChangeListener
             fieldNames = controller .getCommandList( "parameterizedFields" );
             for ( String fName : fieldNames ) {
 				if ( controller .propertyIsTrue( "enable." + fName + ".field" ) ) {
-					String label = controller .getProperty( "field.label." + fName + "7" );
-		            submenu .add( createMenuItem( label + " Field", "new-" + fName + "7") );
+					String label = controller .getProperty( "field.label." + fName );
+					String strMin = controller .getProperty( fName + ".field.minimum" );
+					String strMax = controller .getProperty( fName + ".field.maximum" );
+                    try {
+                        int min = Integer.parseInt(strMin);
+                        int max = Integer.parseInt(strMax);
+                        min = Math.max(min, 1);
+                        max = Math.min(max, min + 10);
+                        for(int i = min; i <=max; i++) {
+                            submenu .add( createMenuItem( label + i + " Field", "new-" + fName + "." + i) );
+                        }
+                    } catch(NumberFormatException ex) {
+                        // just ignore it for now and don't add any more menu items
+                    }
 				}
 			}
 

@@ -625,6 +625,9 @@ public class DocumentController extends DefaultController implements J3dComponen
     {
         String name =  symmetrySystem .getName();
         symmetryController = getSymmetryController( name );
+        if(symmetryController == null) {
+            throw new IllegalArgumentException("No such SymmetryController: " + name);
+        }
 
         String modelResourcePath = this .symmetryController .getProperty( "modelResourcePath" );
         mControlBallModel = this .mApp .getSymmetryModel( modelResourcePath, symmetrySystem .getSymmetry() );

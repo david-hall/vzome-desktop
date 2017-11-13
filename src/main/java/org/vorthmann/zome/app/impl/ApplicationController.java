@@ -399,10 +399,39 @@ public class ApplicationController extends DefaultController
 	            case "snubDodec":
 					return "Snub Dodec";
 
+	            case "snubCube":
+					return "Snub Cube";
+
+	            case "sqrt":
+					return "\u221A";
+
+	            case "sqrtPhi":
+					return "\u221A\u03C6";
+
+	            case "phiPlusSqrt":
+					return "\u03C6+\u221A";
+
 				default:
-					return fieldName;
+                    // capitalize first letter
+					return Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
 				}
 			}
+			if ( propName.endsWith( ".field.minimum" ) )
+            {
+                // prefs file overrides modelApp
+                String prefs = properties .getProperty( propName );
+                return (prefs == null || prefs.trim() == "")
+                        ? this.modelApp.getFieldMinimum(propName.replace(".field.minimum", ""))
+                        : prefs;
+            }
+			if ( propName.endsWith( ".field.maximum" ) )
+            {
+                // prefs file overrides modelApp
+                String prefs = properties .getProperty( propName );
+                return (prefs == null || prefs.trim() == "")
+                        ? this.modelApp.getFieldMaximum(propName.replace(".field.maximum", ""))
+                        : prefs;
+            }
 			if ( propName .startsWith( "enable." ) && propName .endsWith( ".field" ) )
 			{
 				String fieldName = propName .substring( "enable." .length() );
